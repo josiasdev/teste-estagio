@@ -1,5 +1,5 @@
 package com.github.josiasdev.webScraping.controller;
-import com.github.josiasdev.webScraping.model.AnexoService;
+import com.github.josiasdev.webScraping.service.AnexoService;
 import com.github.josiasdev.webScraping.view.ConsoleView;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
