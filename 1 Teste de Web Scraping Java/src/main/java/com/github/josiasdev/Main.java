@@ -1,7 +1,7 @@
 package com.github.josiasdev;
 
 import com.github.josiasdev.webScraping.view.ConsoleView;
-import com.github.josiasdev.webScraping.model.AnexoService;
+import com.github.josiasdev.webScraping.service.AnexoService;
 import com.github.josiasdev.webScraping.controller.AnexoController;
 public class Main {
     public static void main(String[] args) {
