@@ -3,11 +3,13 @@ package com.github.josiasdev.service;
 import com.aspose.pdf.*;
 
 import java.io.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.aspose.zip.Archive;
+import com.aspose.zip.ArchiveEntrySettings;
 
 public class ProcedimentoService {
-    static final int TAMANHO_BUFFER = 4096;
 
     public boolean extrairDadosPdf(String filename) {
         try {
@@ -18,18 +20,43 @@ public class ProcedimentoService {
                 absorber.visit(page);
 
                     for (AbsorbedTable table : absorber.getTableList()) {
+                        List<Integer> targetColumns = new ArrayList<>();
+                        if (!table.getRowList().isEmpty()) {
+                            AbsorbedRow headerRow = table.getRowList().get(0);
+                            int columnIndex = 0;
+                            for (AbsorbedCell cell : headerRow.getCellList()) {
+                                StringBuilder headerTextBuilder = new StringBuilder();
+                                for (TextFragment fragment : cell.getTextFragments()) {
+                                    for (TextSegment seg : fragment.getSegments()) {
+                                        headerTextBuilder.append(seg.getText().trim()).append(" ");
+                                    }
+                                }
+                                String headerText = headerTextBuilder.toString().trim();
+                                if (headerText.equalsIgnoreCase("OD") || headerText.equalsIgnoreCase("AMB")) {
+                                    targetColumns.add(columnIndex);
+                                }
+                                columnIndex++;
+                            }
+                        }
+
                         for (AbsorbedRow row : table.getRowList()) {
                             StringBuilder csvRow = new StringBuilder();
+                            int columnIndex = 0;
                             for (AbsorbedCell cell : row.getCellList()) {
                                 StringBuilder sb = new StringBuilder();
-                                TextFragmentCollection textFragmentCollection = cell.getTextFragments();
-                                for (TextFragment fragment : textFragmentCollection) {
+                                for (TextFragment fragment : cell.getTextFragments()) {
                                     for (TextSegment seg : fragment.getSegments()) {
-                                        sb.append(seg.getText().trim()).append(" ");
+                                       String text = seg.getText().trim();
+                                        if (targetColumns.contains(columnIndex)) {
+                                            text = text.replace("OD", "Seg. Odontológica")
+                                                    .replace("AMB", "Seg. Ambulatorial");
+                                        }
+                                        sb.append(text).append(" ");
                                     }
                                 }
                                 String cellText = sb.toString().trim().replace("\"", "'");
                                 csvRow.append('"').append(cellText).append('"').append(",");
+                                columnIndex++;
                             }
                             if (csvRow.length() > 0) {
                                 csvContent.append(csvRow.substring(0, csvRow.length() - 1)).append("\n"); // Remove última vírgula
@@ -48,9 +75,7 @@ public class ProcedimentoService {
             e.printStackTrace();
             return false;
         }
-
     }
-
     private void salvarCsv(String filename, String content) {
         try (FileWriter writer = new FileWriter(filename)) {
             writer.write(content);
@@ -59,28 +84,17 @@ public class ProcedimentoService {
         }
     }
 
-    public void compactarParaZip(String arqSaida, String arqEntrada){
-        int cont;
-        byte[] dados = new byte[TAMANHO_BUFFER];
-        BufferedInputStream origem = null;
-        FileInputStream streamEntrada = null;
-        FileOutputStream destino = null;
-        ZipOutputStream saida = null;
-        ZipEntry entry = null;
-        try{
-            destino = new FileOutputStream(new File(arqSaida));
-            saida = new ZipOutputStream(new BufferedOutputStream(destino));
-            File file = new File(arqEntrada);
-            streamEntrada = new FileInputStream(file);
-            origem = new BufferedInputStream(streamEntrada, TAMANHO_BUFFER);
-            entry = new ZipEntry(file.getName());
-            saida.putNextEntry(entry);
-            while ((cont = origem.read(dados, 0, TAMANHO_BUFFER)) != -1){
-                saida.write(dados, 0, cont);
+    public void compactarZip(){
+        try(FileOutputStream zipFile = new FileOutputStream("teste_{josias}.zip")){
+            try (FileInputStream source1 = new FileInputStream("rol_procedimento.csv")){
+                try (Archive archive = new Archive(new ArchiveEntrySettings())){
+                    archive.createEntry("rol_procedimento.csv", source1);
+                    archive.save(zipFile);
+                }
+            } catch (IOException e){
+                e.printStackTrace();
             }
-            origem.close();
-            saida.close();
-        } catch (Exception e){
+        } catch (IOException e){
             e.printStackTrace();
         }
     }
