@@ -12,9 +12,9 @@ public class ProcedimentoController {
         this.view = view;
     }
     public void processar(){
-        if(procedimentoService.extrairDadosPdf("Anexo I.pdf")){
+        if(procedimentoService.extrairTextoDoPDF("Anexo I.pdf")){
             view.exibirMensagem("Dados extraidos com sucesso!");
-            procedimentoService.compactarZip();
+            procedimentoService.compactarParaZip("Teste_{Josias}.zip", "rol_procedimento.csv");
             view.exibirMensagem("Arquivo compactado com sucesso!");
         }
         else{
