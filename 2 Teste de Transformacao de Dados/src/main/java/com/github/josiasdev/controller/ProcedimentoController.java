@@ -14,7 +14,7 @@ public class ProcedimentoController {
     public void processar(){
         if(procedimentoService.extrairDadosPdf("Anexo I.pdf")){
             view.exibirMensagem("Dados extraidos com sucesso!");
-            procedimentoService.compactarParaZip("teste_{josias}.zip", "rol_procedimento.csv");
+            procedimentoService.compactarZip();
             view.exibirMensagem("Arquivo compactado com sucesso!");
         }
         else{
