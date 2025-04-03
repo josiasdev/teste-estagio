@@ -1,4 +1,4 @@
--- Aqui criei uma nova tabela para guardar as despesas do 4 trimestre de 2022 acredito que fique mais organizado
+-- Aqui criei uma nova tabela para guardar as despesas do 4 trimestre de 2023 acredito que fique mais organizado
 
 CREATE TABLE despesas4trimestre2023 (
 	operadora VARCHAR(255),
