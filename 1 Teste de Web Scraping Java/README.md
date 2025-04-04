@@ -2,9 +2,18 @@
 
 Este projeto é uma aplicação simples de **Web Scraping** utilizando **Spring Boot 3.4.4**, **Java 24**, **JSoup** para a extração de dados da web e **Swagger UI** para a documentação interativa da API.
 
+## 🚀 Tecnologias Utilizadas
+
+![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=java&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Swagger UI](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
+![JSoup](https://img.shields.io/badge/JSoup-1.19.1-blue?style=for-the-badge&logo=java&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apache-maven&logoColor=white)
+![Lombok](https://img.shields.io/badge/Lombok-1.18.38-red?style=for-the-badge&logo=java&logoColor=white)
+
+
+
 ## 🧱 Estrutura do Projeto
-
-
 
 ````
 📦 1 Teste de Web Scraping Java
@@ -34,18 +43,6 @@ Este projeto é uma aplicação simples de **Web Scraping** utilizando **Spring 
 - `AnexoResponse`: DTO para encapsular a resposta da API com os dados extraídos.
 - `AnexoErrorResponse`: DTO para retorno de erros estruturados.
 
-## 🚀 Tecnologias Utilizadas
-
-- Java 24
-- Spring Boot 3.4.4
-- JSoup 1.19.1
-- Swagger UI (via Springdoc OpenAPI 2.2.0)
-- Maven
-
-## 🔍 Documentação da API
-
-Acesse a interface do Swagger para testar os endpoints diretamente pelo navegador:
-http://localhost:8080/swagger-ui/index.html#
 
 ## 📦 Como Rodar o projeto
 
@@ -61,7 +58,7 @@ cd 1\ Teste\ de\ Web\ Scraping\ Java/
 ./mvnw spring-boot:run
 ```
 
-3. Acesse
+3. Acesse para visualiar e testar a API
 ```bash
 http://localhost:8080/swagger-ui/index.html
 ```
@@ -91,3 +88,14 @@ http://localhost:8080/swagger-ui/index.html
 
 400 Bad Request – Parâmetros inválidos ou ausentes. <br>
 500 Internal Server Error – Falha ao acessar a página ou realizar o scraping.
+
+
+
+### 🔽 `GET /anexos/zip`
+Faz o download do arquivo ZIP contendo os anexos baixados anteriormente.
+
+
+### Respostas possiveis:
+200 OK – Retorna o arquivo ZIP para download.<br>
+404 Not Found – Arquivo ZIP não encontrado (não foi criado ainda).<br>
+500 Internal Server Error – Erro ao tentar ler o arquivo ZIP.
